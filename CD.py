@@ -3,29 +3,28 @@ village = list(map(int, input().split()))
 m = int(input())
 shelters = list(map(int, input().split()))
 
-for i in range(len(village)):
-    village[i] = [village[i], village.index(village[i])]
+for i in range(n):
+    village[i] = [village[i], i + 1, 0]
 
-for k in range(len(shelters)):
-    shelters[k] = [shelters[k], shelters.index(shelters[k]) + 1]
+for i in range(m):
+    shelters[i] = [shelters[i], i + 1]
 
 village.sort()
 shelters.sort()
-result = []
 
-for y in range(len(village)):
-    for x in range(len(shelters)):
-        if len(shelters) == 1:
-            result.append([village[y][1], shelters[x][1]])
+start = 0
+for i in range(n):
+    minimum = 10e10
+    for j in range(start, m):
+        tmp = abs(village[i][0] - shelters[j][0])
+        if tmp < minimum:
+            idx = j
+            minimum = tmp
+            village[i][2] = shelters[j][1]
+        else:
             break
-        if abs(village[y][0] - shelters[x][0]) < \
-           abs(village[y][0] - shelters[x + 1][0]):
-            result.append([village[y][1], shelters[x][1]])
-            break
-        if (x + 1) == (len(shelters) - 1):
-            result.append([village[y][1], shelters[x + 1][1]])
-            break
+    start = idx
 
-result.sort()
+village.sort(key=lambda idx: idx[1])
 
-print(*[j[1] for j in result])
+print(*[j[2] for j in village])
